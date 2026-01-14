@@ -1,6 +1,6 @@
 # Qobuz Discord RPC
 
-This script adds Discord Rich Presence support to the Qobuz desktop application.
+This mod adds Discord Rich Presence support to the Qobuz desktop application.
 
 ## Installation
 
