@@ -1,18 +1,25 @@
 {
   "name": "qobuz-discord-rpc",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@tailwindcss/vite": "^4.1.18",
     "@types/bun": "latest",
     "@types/electron": "^1.6.12",
     "@xhayper/discord-rpc": "^1.3.0",
-    "esbuild": "^0.27.2"
+    "esbuild": "^0.27.2",
+    "svelte": "^5.46.3",
+    "svelte-preprocess": "^6.0.3",
+    "tailwindcss": "^4.1.18",
+    "vite": "^7.3.1",
+    "vite-plugin-css-injected-by-js": "^3.5.2"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "private": true,
   "scripts": {
-    "build": "esbuild ./index.ts --bundle --platform=node --target=node16 --format=cjs --outfile=dist/qobuz-discord-rpc.js --external:electron"
+    "build": "bun scripts/build.ts"
   },
   "type": "module"
 }
