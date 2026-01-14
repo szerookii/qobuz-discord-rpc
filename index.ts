@@ -41,7 +41,7 @@ function sendRPCUpdate(seek: number = 0): void {
         type: 2,
         name: currentMetadata.title,
         details: `${currentMetadata.title}`,
-        state: `de ${currentMetadata.artist}`,
+        state: `by ${currentMetadata.artist}`,
         largeImageKey: currentMetadata.image,
         largeImageText: currentMetadata.album,
         smallImageKey: currentMetadata.paused ? 'icon-paused' : 'icon-playing',
