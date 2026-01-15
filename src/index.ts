@@ -21,6 +21,12 @@ interface Metadata {
     duration?: number;
 }
 
+interface PlayQueueInfo {
+    trackTitle?: string;
+    artistName?: string;
+    album?: string;
+}
+
 interface TrackInfo {
     title: string;
     artist: string;
@@ -62,10 +68,10 @@ function updateDiscordActivity(): void {
 }
 
 function clearDiscordActivity(): void {
-    discord.user?.clearActivity().catch(() => {});
+    discord.user?.clearActivity().catch(() => { });
 }
 
-discord.login().catch(() => {});
+discord.login().catch(() => { });
 
 //////////////////////////////////////////////////////////////////
 // ELECTRON HOOKS
@@ -96,15 +102,15 @@ const HookedBrowserWindow = new Proxy(OriginalBrowserWindow, {
     },
 });
 
-Module.prototype.require = function(id: string) {
+Module.prototype.require = function (id: string) {
     const mod = originalRequire.call(this, id);
-    
+
     if (id === 'electron') {
         return new Proxy(mod, {
             get: (target, prop: string) => prop === 'BrowserWindow' ? HookedBrowserWindow : target[prop],
         });
     }
-    
+
     return mod;
 };
 
@@ -133,7 +139,7 @@ ipcMain.on('rpc-toggle', (_, enabled: boolean) => {
 
 const originalEmit = ipcMain.emit.bind(ipcMain);
 
-ipcMain.emit = function(channel: string, event?: IpcMainEvent | unknown, ...args: unknown[]): boolean {
+ipcMain.emit = function (channel: string, event?: IpcMainEvent | unknown, ...args: unknown[]): boolean {
     switch (channel) {
         case 'player-load-music': {
             const meta = args[1] as Metadata;
@@ -146,14 +152,26 @@ ipcMain.emit = function(channel: string, event?: IpcMainEvent | unknown, ...args
             updateDiscordActivity();
             break;
         }
+
+        case 'player-get-playqueue-info': { // idk its used by auto next and when forward but not rewind wtf idk but ok
+            const meta = args[0] as PlayQueueInfo;
+            trackInfo.title = meta.trackTitle || 'Unknown Title';
+            trackInfo.artist = meta.artistName || 'Unknown Artist';
+            trackInfo.album = meta.album || 'Unknown Album';
+            updateDiscordActivity();
+            break;
+        }
+
         case 'player-pause-music':
             trackInfo.paused = true;
             updateDiscordActivity();
             break;
+
         case 'player-play-music':
             trackInfo.paused = false;
             updateDiscordActivity();
             break;
+
         case 'player-change-offset':
             updateDiscordActivity();
             break;
